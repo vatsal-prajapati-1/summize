@@ -1,9 +1,13 @@
-import { Button } from "@/components/ui/button";
+import BgGradient from "@/components/common/bg-gradient";
+import HeroSection from "@/components/home/hero-section";
 
 const Home = () => {
   return (
-    <div>
-      <Button variant="outline">Shadcn</Button>
+    <div className="relative w-full">
+      <BgGradient />
+      <div className="flex flex-col">
+        <HeroSection />
+      </div>
     </div>
   );
 };

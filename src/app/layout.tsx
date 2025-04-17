@@ -21,9 +21,9 @@ const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
     <html lang="en">
       <body className={`${fontSans.variable} font-sans antialiased`}>
         <div className="relative flex min-h-screen flex-col">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
         </div>
       </body>
     </html>
