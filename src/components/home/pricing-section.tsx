@@ -49,7 +49,6 @@ const PricingCard = ({
   items,
   id,
   paymentLink,
-  priceId,
 }: PriceType) => {
   return (
     <div className="relative w-full max-w-lg hover:scale-105 hover:transition-all duration-300">
@@ -109,7 +108,7 @@ const PricingSection = () => {
         </div>
         <div className="relative flex justify-center flex-col lg:flex-row items-center lg:items-stretch gap-8">
           {plans.map((plan) => (
-            <PricingCard key={plan.id} {...plan} />
+            <PricingCard key={plan.id} {...{...plan, price: Number(plan.price)}} />
           ))}
         </div>
       </div>
