@@ -21,7 +21,7 @@ const CTASection = () => {
               <Button
                 size="lg"
                 variant={"link"}
-                className="w-full min-[400px]:w-auto bg-linear-to-r from-slate-900 to-rose-500 hover:from-rose-500 hover:to-slate-900 hover:text-white text-white transition-all duration-300"
+                className="w-full min-[400px]:w-auto bg-linear-to-r from-slate-900 to-rose-500 hover:from-rose-500 hover:to-slate-900 hover:text-white text-white transition-all duration-300 hover:no-underline"
               >
                 <Link
                   href="/#pricing"

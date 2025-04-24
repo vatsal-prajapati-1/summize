@@ -1,7 +1,11 @@
 "use client";
-import generatePdfSummary from "@/actions/upload-actions";
+import {
+  generatePdfSummary,
+  storePdfSummaryAction,
+} from "@/actions/upload-actions";
 import UploadFormInput from "@/components/upload/upload-form-input";
 import { useUploadThing } from "@/utils/uploadthing";
+import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -20,6 +24,7 @@ const schema = z.object({
 });
 
 const UploadForm = () => {
+  const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { startUpload, routeConfig } = useUploadThing("pdfUploader", {
@@ -89,27 +94,40 @@ const UploadForm = () => {
 
       const { data = null, message = null } = result || {};
 
-      // console.log(data, "data should be console logged");
-
       if (data) {
+        let storeResult: any;
         toast.message("📄 Saving PDF...", {
           description: "Hang tight! We are saving your summary! ✨",
         });
-        formRef.current?.reset();
         setIsLoading(false);
         if (data.summary) {
           // Handle summary data if needed
+          storeResult = await storePdfSummaryAction({
+            summary: data.summary,
+            file_url: response[0].serverData.file.url,
+            title: data.title,
+            fileName: file.name,
+          });
+
+          toast.success("✨ Summary Generated!", {
+            description: "Your PDF has been successfully summarized and saved",
+          });
+
+          formRef.current?.reset();
+
+          router.push(`/summaries/${storeResult?.data?.id}`);
         }
       } else {
         setIsLoading(false);
       }
     } catch (error) {
-      setIsLoading(false);
       console.error("Error occurred", error);
       formRef.current?.reset();
       toast.error("An error occurred", {
         description: "Please try again later",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
