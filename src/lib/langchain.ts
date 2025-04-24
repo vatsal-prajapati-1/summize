@@ -8,7 +8,7 @@ const fetchAndExtractPdfText = async (fileUrl: string): Promise<string> => {
     }
 
     const blob = await response.blob();
-    const loader = new PDFLoader(blob); // Directly use blob instead of converting
+    const loader = new PDFLoader(blob); 
 
     const docs = await loader.load();
     return docs.map((doc) => doc.pageContent).join("\n");
