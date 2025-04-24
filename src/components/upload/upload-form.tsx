@@ -53,10 +53,6 @@ const UploadForm = () => {
       console.log(validateFields, "validate fields should be console logged");
 
       if (!validateFields.success) {
-        //   console.log(
-        //     validateFields.error.flatten().fieldErrors.file?.[0] ?? "Invalid file"
-        //   );
-
         toast.error("❌ Something went wrong", {
           description:
             validateFields.error.flatten().fieldErrors.file?.[0] ??
@@ -64,7 +60,6 @@ const UploadForm = () => {
         });
 
         setIsLoading(false);
-
         return;
       }
 
@@ -86,23 +81,35 @@ const UploadForm = () => {
         description: "Hang tight! Our AI is reading through your document! ✨",
       });
 
+      console.log(response, "response should be console logged");
+
       const result = await generatePdfSummary(response);
 
+      // console.log(result, "result should be console logged");
+
       const { data = null, message = null } = result || {};
+
+      // console.log(data, "data should be console logged");
 
       if (data) {
         toast.message("📄 Saving PDF...", {
           description: "Hang tight! We are saving your summary! ✨",
         });
         formRef.current?.reset();
-        if(data.summary) {
-          
+        setIsLoading(false);
+        if (data.summary) {
+          // Handle summary data if needed
         }
+      } else {
+        setIsLoading(false);
       }
     } catch (error) {
       setIsLoading(false);
       console.error("Error occurred", error);
       formRef.current?.reset();
+      toast.error("An error occurred", {
+        description: "Please try again later",
+      });
     }
   };
 
