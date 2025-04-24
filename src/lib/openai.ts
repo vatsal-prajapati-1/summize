@@ -3,12 +3,30 @@ import OpenAI from "openai";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
+  maxRetries: 3,
+  timeout: 30000,
 });
 
-const generateSummaryFromOpenAI = async (pdfText: string): Promise<string> => {
+const DEFAULT_MODEL = "gpt-4.1";
+const DEFAULT_MAX_TOKENS = 1500;
+
+interface SummaryOptions {
+  model?: string;
+  maxTokens?: number;
+  temperature?: number;
+}
+
+const generateSummaryFromOpenAI = async (
+  pdfText: string,
+  options?: SummaryOptions
+): Promise<string> => {
   try {
+    if (!pdfText?.trim()) {
+      throw new Error("EMPTY_INPUT_TEXT");
+    }
+
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: options?.model || DEFAULT_MODEL,
       messages: [
         { role: "system", content: SUMMARY_SYSTEM_PROMPT },
         {
@@ -16,23 +34,30 @@ const generateSummaryFromOpenAI = async (pdfText: string): Promise<string> => {
           content: `Transform this document into an engaging, easy-to-read summary with contextually relevant emojis and proper markdown formatting:\n\n${pdfText}`,
         },
       ],
-      temperature: 0.7,
-      max_tokens: 1500,
+      temperature: options?.temperature ?? 0.7,
+      max_tokens: options?.maxTokens ?? DEFAULT_MAX_TOKENS,
     });
 
-    if (!completion.choices[0]?.message?.content) {
-      throw new Error("No content received from OpenAI");
+    const summary = completion.choices[0]?.message?.content;
+    if (!summary?.trim()) {
+      throw new Error("EMPTY_RESPONSE");
     }
 
-    return completion.choices[0].message.content;
+    return summary;
   } catch (error: any) {
-    if (error.status === 429) {
-      throw new Error("Rate limit exceeded");
+    console.error("OpenAI API Error:", error);
+    
+    if (error?.status === 429 || error?.code === 'insufficient_quota') {
+      throw new Error("RATE_LIMIT_EXCEEDED");
     }
-    if (error.response?.status === 401) {
-      throw new Error("Invalid API key");
+    if (error?.response?.status === 401) {
+      throw new Error("INVALID_API_KEY");
     }
-    throw error;
+    if (error?.code === "context_length_exceeded") {
+      throw new Error("CONTEXT_TOO_LONG");
+    }
+    
+    throw new Error("OPENAI_API_ERROR");
   }
 };
 
