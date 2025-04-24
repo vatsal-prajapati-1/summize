@@ -1,5 +1,4 @@
 "use server";
-
 import generateSummaryFromGemini from "@/lib/geminiai";
 import fetchAndExtractPdfText from "@/lib/langchain";
 import generateSummaryFromOpenAI from "@/lib/openai";
@@ -51,12 +50,13 @@ const generatePdfSummary = async (
 
     try {
       summary = await generateSummaryFromOpenAI(pdfText);
-      console.log({ summary }, "this is the summary");
+      console.log({ summary }, "this is the open ai summary");
     } catch (error) {
       console.log(error, "this is the error");
       if (error instanceof Error && error.message === "RATE_LIMIT_EXCEEDED") {
         try {
           summary = await generateSummaryFromGemini(pdfText);
+          console.log({ summary }, "this is the gemini summary");
         } catch (geminiError) {
           console.error(
             "Gemini API failed after OpenAI quote exceeded",
