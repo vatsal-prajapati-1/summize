@@ -11,8 +11,8 @@ const pricingPlans = [
       "Email support",
     ],
     id: "basic",
-    paymentLink: isDev ? "https://buy.stripe.com/test_eVa4hAeKX6xc3ew289" : "",
-    priceId: isDev ? "price_1RHlD9PSnCveH15MzbXfXqq9" : "",
+    paymentLink: isDev ? (process.env.STRIPE_BASIC_PACKAGE as string) : "",
+    priceId: isDev ? (process.env.STRIPE_BASIC_PACKAGE_PRICEID as string) : "",
   },
   {
     name: "Pro",
@@ -25,9 +25,51 @@ const pricingPlans = [
       "Markdown Export",
     ],
     id: "pro",
-    paymentLink: isDev ? "https://buy.stripe.com/test_3cs8xQgT508O4iA4gg" : "",
-    priceId: isDev ? "price_1RHlD9PSnCveH15MI7KGJz2L" : "",
+    paymentLink: isDev ? (process.env.STRIPE_PRO_PACKAGE as string) : "",
+    priceId: isDev ? (process.env.STRIPE_PRO_PACKAGE_PRICEID as string) : "",
   },
 ];
 
-export { pricingPlans };
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    transition: {
+      type: "spring",
+      damping: 15,
+      stiffness: 50,
+      duration: 0.8,
+    },
+  },
+};
+
+const buttonVariants = {
+  scale: 1.05,
+  transition: {
+    type: "spring",
+    stiffness: 300,
+    damping: 10,
+  },
+};
+
+const listVariant = {
+  hidden: { opacity: 0, x: -20 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { type: "spring", damping: 20, stiffness: 100 },
+  },
+};
+
+export { pricingPlans, containerVariants, itemVariants, buttonVariants, listVariant };
