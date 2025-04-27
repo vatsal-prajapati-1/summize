@@ -40,8 +40,8 @@ const UploadForm = () => {
         description: err.message,
       });
     },
-    onUploadBegin: (file: string) => {
-      console.log("upload has begun for", file);
+    onUploadBegin: (data) => {
+      console.log("upload has begun for", data);
     },
   });
 
