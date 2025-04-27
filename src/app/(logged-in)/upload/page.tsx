@@ -7,6 +7,8 @@ import { hasReachedUploadLimit } from "@/lib/user";
 import { MotionDiv } from "@/components/common/motion-wrapper";
 import { containerVariants } from "@/utils/constants";
 
+export const maxDuaration = 60;
+
 const page = async () => {
   const user = await currentUser();
 

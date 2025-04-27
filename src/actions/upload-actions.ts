@@ -15,35 +15,8 @@ interface PdfSummaryType {
   fileName: string;
 }
 
-const generatePdfSummary = async (
-  uploadResponse: [
-    {
-      serverData: {
-        userId: string;
-        file: {
-          url: string;
-          name: string;
-        };
-      };
-    }
-  ]
-) => {
-  if (!uploadResponse) {
-    return {
-      success: false,
-      message: "File upload failed",
-      data: null,
-    };
-  }
-
-  const {
-    serverData: {
-      userId,
-      file: { url: pdfUrl, name: fileName },
-    },
-  } = uploadResponse[0];
-
-  if (!pdfUrl) {
+const generatedPdfText = async ({ fileUrl }: { fileUrl: string }) => {
+  if (!fileUrl) {
     return {
       success: false,
       message: "File upload failed",
@@ -52,12 +25,44 @@ const generatePdfSummary = async (
   }
 
   try {
-    const pdfText = await fetchAndExtractPdfText(pdfUrl);
+    const pdfText = await fetchAndExtractPdfText(fileUrl);
 
-    console.log("{pdfText}", pdfText);
+    console.log("file url is should be console logged", fileUrl);
 
-    console.log(pdfText, "this is full pdf text should be console logged");
+    console.log({ pdfText }, "this is full pdf text should be console logged");
 
+    if (!pdfText) {
+      return {
+        success: false,
+        message: "Failed to fetch and extract PDF text",
+        data: null,
+      };
+    }
+
+    return {
+      success: true,
+      message: "PDF text generated successfully",
+      data: {
+        pdfText,
+      },
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Failed to fetch and extract PDF text",
+      data: null,
+    };
+  }
+};
+
+const generatePdfSummary = async ({
+  pdfText,
+  fileName,
+}: {
+  pdfText: string;
+  fileName: string;
+}) => {
+  try {
     let summary;
 
     try {
@@ -75,10 +80,15 @@ const generatePdfSummary = async (
             geminiError
           );
           throw new Error(
-            "Failed to generate summary with available AI providers"
+            "Failed to generate summary with available AI viders"
           );
         }
       }
+      return {
+        success: false,
+        message: "Failed to generate summary",
+        data: null,
+      };
     }
 
     if (!summary) {
@@ -89,20 +99,18 @@ const generatePdfSummary = async (
       };
     }
 
-    const formattedFileName = formatFileNameAsTitle(fileName);
-
     return {
       success: true,
       message: "Summary generated successfully",
       data: {
-        title: formattedFileName,
+        title: fileName,
         summary,
       },
     };
   } catch (error) {
     return {
       success: false,
-      message: "File upload failed",
+      message: "Failed to generate summary",
       data: null,
     };
   }
@@ -177,4 +185,4 @@ const storePdfSummaryAction = async ({
   };
 };
 
-export { generatePdfSummary, storePdfSummaryAction };
+export { generatePdfSummary, storePdfSummaryAction, generatedPdfText };
