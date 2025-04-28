@@ -1,5 +1,5 @@
 import UpgradeRequired from "@/components/common/upgrade-required";
-import { getSubscriptionStatus, hasActivePlan } from "@/lib/user";
+import { hasActivePlan } from "@/lib/user";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
@@ -15,10 +15,14 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
   );
 
   if (hasActiveSubscription) {
-    return <UpgradeRequired />;
+    return (
+      <div>
+        <UpgradeRequired />
+      </div>
+    );
   }
 
-  return <>{children}</>;
+  return <div>{children}</div>;
 };
 
 export default layout;

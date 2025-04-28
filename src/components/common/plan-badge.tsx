@@ -34,7 +34,12 @@ const PlanBadge = async () => {
         !priceId && "from-red-100 to-red-200 border-red-300"
       )}
     >
-        <Crown className={cn("w-3 h-3 mr-1 text-amber-600", !priceId && 'text-red-600')} />
+      <Crown
+        className={cn(
+          "w-3 h-3 mr-1 text-amber-600",
+          !priceId && "text-red-600"
+        )}
+      />
       {planName}
     </Badge>
   );

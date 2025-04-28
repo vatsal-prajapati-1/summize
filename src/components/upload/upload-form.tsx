@@ -17,8 +17,8 @@ const schema = z.object({
   file: z
     .instanceof(File, { message: "Invalid file" })
     .refine(
-      (file) => file.size < 20 * 1024 * 1024,
-      "File size must be less than 20mb"
+      (file) => file.size < 32 * 1024 * 1024,
+      "File size must be less than 32mb"
     )
     .refine(
       (file) => file.type.startsWith("application/pdf"),
@@ -35,9 +35,9 @@ const UploadForm = () => {
       console.log("uploaded successfully!");
     },
     onUploadError: (err) => {
-      console.log("error occurred while uploading", err);
-      toast.error("Error occurred while uploading", {
-        description: err.message,
+      console.error("Upload error details:", err); // More detailed logging
+      toast.error("Upload failed", {
+        description: err.message || "Please check file size and format",
       });
     },
     onUploadBegin: (data) => {
@@ -107,6 +107,8 @@ const UploadForm = () => {
         fileUrl: fileUrl,
       });
 
+      console.log(result, "result should be console logged");
+
       toast.message("📄Generating PDF Summary", {
         description: "Hang tight! Our AI is reading through your document! ✨",
       });
@@ -115,6 +117,8 @@ const UploadForm = () => {
         pdfText: result?.data?.pdfText ?? "",
         fileName: formattedFileName,
       });
+
+      console.log(summaryResult, "summary result should be console logged");
 
       toast.message("📄Saving PDF Summary", {
         description: "Hang tight! Our AI is reading through your document! ✨",
