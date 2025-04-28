@@ -2,6 +2,7 @@ import { FileText } from "lucide-react";
 import NavLink from "./nav-link";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import PlanBadge from "./plan-badge";
+import Image from "next/image";
 
 const Header = () => {
   return (
