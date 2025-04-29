@@ -1,7 +1,5 @@
 # Summize AI - PDF Summarization Tool
 
-![Summize Logo](https://via.placeholder.com/150x50?text=Summize+AI)
-
 Summize AI is an intelligent document summarization tool that transforms lengthy PDFs into concise, easy-to-digest summaries using advanced AI technology. Built with Next.js, Clerk authentication, and OpenAI/Gemini LLMs, it provides a seamless, secure, and user-friendly experience for individuals and professionals who need to extract insights from large documents quickly.
 
 ---
