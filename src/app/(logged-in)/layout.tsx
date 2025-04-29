@@ -1,7 +1,7 @@
 import UpgradeRequired from "@/components/common/upgrade-required";
 import { hasActivePlan } from "@/lib/user";
-import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { currentUser } from "@clerk/nextjs/server";
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
   const user = await currentUser();
