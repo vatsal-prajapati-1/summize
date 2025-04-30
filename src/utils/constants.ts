@@ -1,5 +1,3 @@
-import { isDev } from "./helper";
-
 const pricingPlans = [
   {
     name: "Basic",
@@ -11,8 +9,8 @@ const pricingPlans = [
       "Email support",
     ],
     id: "basic",
-    paymentLink: isDev ? (process.env.STRIPE_BASIC_PACKAGE as string) : "",
-    priceId: isDev ? (process.env.STRIPE_BASIC_PACKAGE_PRICEID as string) : "",
+    paymentLink: (process.env.STRIPE_BASIC_PACKAGE as string) || "",
+    priceId: (process.env.STRIPE_BASIC_PACKAGE_PRICEID as string) || "",
   },
   {
     name: "Pro",
@@ -25,8 +23,8 @@ const pricingPlans = [
       "Markdown Export",
     ],
     id: "pro",
-    paymentLink: isDev ? (process.env.STRIPE_PRO_PACKAGE as string) : "",
-    priceId: isDev ? (process.env.STRIPE_PRO_PACKAGE_PRICEID as string) : "",
+    paymentLink: (process.env.STRIPE_PRO_PACKAGE as string) || "",
+    priceId: (process.env.STRIPE_PRO_PACKAGE_PRICEID as string) || "",
   },
 ];
 
@@ -72,4 +70,10 @@ const listVariant = {
   },
 };
 
-export { pricingPlans, containerVariants, itemVariants, buttonVariants, listVariant };
+export {
+  pricingPlans,
+  containerVariants,
+  itemVariants,
+  buttonVariants,
+  listVariant,
+};
