@@ -6,9 +6,10 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 const generateSummaryFromGemini = async (pdfText: string) => {
   try {
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-pro-002",
+      model: "gemini-2.0-flash-001",
       generationConfig: {
         temperature: 0.7,
+        // maxOutputTokens: 1500,
         maxOutputTokens: 1000,
       },
     });
@@ -30,13 +31,13 @@ const generateSummaryFromGemini = async (pdfText: string) => {
     const result = await model.generateContent(prompt);
     const response = result.response;
 
-    if (!response?.text()) {
+    if (!response.text()) {
       throw new Error("Empty response from Gemini API");
     }
 
     return response.text();
   } catch (error: any) {
-    console.error("GEMINI_API_ERROR: ", error);
+    console.error("Gemini API Error: ", error);
     throw error;
   }
 };

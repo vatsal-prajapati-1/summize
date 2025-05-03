@@ -15,11 +15,11 @@ export const ourFileRouter = {
       return { userId: user.id };
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      console.log("upload completed for user id", metadata.userId);
-      console.log(file.url, "file url");
+      // console.log("upload completed for user id", metadata.userId);
+      // console.log(file.ufsUrl, "file url");
       return {
         userId: metadata.userId,
-        fileUrl: file.url,
+        fileUrl: file.ufsUrl,
         fileName: file.name,
       };
     }),

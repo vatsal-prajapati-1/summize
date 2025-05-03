@@ -35,8 +35,8 @@ const UploadForm = () => {
       console.log("uploaded successfully!");
     },
     onUploadError: (err) => {
-      console.error("Upload error details:", err); // More detailed logging
-      toast.error("Upload failed", {
+      console.error("Error occured while uploading", err);
+      toast.error("Error occured while uploading", {
         description: err.message || "Please check file size and format",
       });
     },
@@ -50,7 +50,7 @@ const UploadForm = () => {
 
     try {
       setIsLoading(true);
-      console.log("Submitted");
+      // console.log("Submitted");
 
       const formData = new FormData(e.currentTarget);
 
@@ -58,7 +58,7 @@ const UploadForm = () => {
 
       const validateFields = schema.safeParse({ file });
 
-      console.log(validateFields, "validate fields should be console logged");
+      // console.log(validateFields, "validate fields should be console logged");
 
       if (!validateFields.success) {
         toast.error("❌ Something went wrong", {
@@ -89,11 +89,10 @@ const UploadForm = () => {
         description: "Hang tight! Our AI is reading through your document! ✨",
       });
 
-      console.log(response, "response should be console logged");
+      // console.log(response, "response should be console logged");
 
       const fileUrl = response[0]?.serverData?.fileUrl;
 
-      // console.log(result, "result should be console logged");
 
       let storeResult: any;
 
@@ -103,11 +102,12 @@ const UploadForm = () => {
 
       const formattedFileName = formatFileNameAsTitle(file.name);
 
+
       const result = await generatedPdfText({
         fileUrl: fileUrl,
       });
 
-      console.log(result, "result should be console logged");
+      // console.log(result, "result should be console logged");
 
       toast.message("📄Generating PDF Summary", {
         description: "Hang tight! Our AI is reading through your document! ✨",
@@ -118,13 +118,15 @@ const UploadForm = () => {
         fileName: formattedFileName,
       });
 
-      console.log(summaryResult, "summary result should be console logged");
+      // console.log(summaryResult, "summary result should be console logged");
 
       toast.message("📄Saving PDF Summary", {
         description: "Hang tight! Our AI is reading through your document! ✨",
       });
 
       const { data = null, message = null } = summaryResult || {};
+
+
 
       if (data?.summary) {
         storeResult = await storePdfSummaryAction({

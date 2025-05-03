@@ -61,50 +61,58 @@ const generatePdfSummary = async ({
   pdfText: string;
   fileName: string;
 }) => {
+  if (!pdfText) {
+    return {
+      success: false,
+      message: "PDF text is required",
+      data: null,
+    };
+  }
+
   try {
     let summary;
-    let provider = 'openai';
 
     try {
       summary = await generateSummaryFromOpenAI(pdfText);
-      console.log({ summary }, "OpenAI summary");
+      // console.log({ summary }, "The summary is generated from open ai");
     } catch (error) {
-      console.log("OpenAI failed, trying Gemini...", error);
-      provider = 'gemini';
-      try {
-        summary = await generateSummaryFromGemini(pdfText);
-        console.log({ summary }, "Gemini summary");
-      } catch (geminiError) {
-        console.error("Both AI providers failed", geminiError);
+      console.log("Error occurred while generating pdf from open ai...", error);
+      if (error instanceof Error && error.message === "RATE_LIMIT_EXCEEDED") {
+        try {
+          summary = await generateSummaryFromGemini(pdfText);
+          // console.log({ summary }, "The summary is generated from gemini");
+        } catch (geminiError) {
+          console.error(
+            "Gemini API failed after OpenAI quote exceeded",
+            geminiError
+          );
+          return {
+            success: false,
+            message: "Failed to generate summary with available AI providers.",
+            data: null,
+          };
+        }
+      } else {
         return {
           success: false,
-          message: "All AI providers are currently unavailable. Please try again later.",
+          message: "Failed to generate summary",
           data: null,
         };
       }
     }
 
-    if (!summary) {
-      return {
-        success: false,
-        message: "Failed to generate summary",
-        data: null,
-      };
-    }
-
     return {
       success: true,
-      message: `Summary generated successfully using ${provider}`,
+      message: "Summary generated successfully",
       data: {
         title: fileName,
         summary,
-        provider
       },
     };
   } catch (error) {
     return {
       success: false,
-      message: "Unexpected error during summary generation",
+      message: "Failed to generate summary",
       data: null,
     };
   }
